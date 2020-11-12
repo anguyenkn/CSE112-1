@@ -5,4 +5,4 @@ for mb in mb-programs.d/*.mb
 do
    mb2mbst.perl $mb
 done
-mv *.mbst ../dot.score
+mv *.mbst ./dot.score
