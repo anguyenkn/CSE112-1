@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id: make-mbst,v 1.1 2020-11-09 21:31:12-08 - - $
+cid -is $0 mb2mbst.perl mbint.st
+for mb in mb-programs.d/*.mb
+do
+   mb2mbst.perl $mb
+done
+mv *.mbst ../dot.score

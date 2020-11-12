@@ -1,0 +1,10 @@
+#!/bin/sh
+# $Id: mk.tests,v 1.1 2020-11-09 17:39:44-08 - - $
+
+[ ! -d tmp ] && mkdir tmp
+
+for i in *.mbst
+do
+   echo mbint.st $i
+   mbint.st $i >tmp/$i.output 2>&1
+done

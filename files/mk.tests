@@ -1,0 +1,8 @@
+#!/bin/sh
+# $Id: mk.tests,v 1.3 2020-11-09 21:33:12-08 - - $
+
+for i in *.mbst
+do
+   echo mbint.st $i
+   mbint.st $i >$i.output 2>&1
+done
