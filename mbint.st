@@ -344,6 +344,7 @@ Object subclass: Main [
          Debug > 0 ifTrue: [Main print: program].
          interpreter := Interpreter new: program.
          Debug > 0 ifTrue: [interpreter print].
+         "go through program and id labels here"
          interpreter interpret.
       ] on: SystemExceptions.FileError do: [:signal|
          stderr << scriptName << ': ' << fileName << ': '
