@@ -104,7 +104,7 @@ Expr subclass: BinopExpr [
    init: op with: opn1 with: opn2 [
       oper := op. opnd1 := opn1. opnd2 := opn2.
    ]
-   value [^ ((opnd1 value) oper (opnd2 value))]
+   value [^ ((opnd1 value) perform:oper (opnd2 value))]
    printOn: file [
       ^ file << self prefix << oper << ' ' << opnd1
              << ' ' << opnd2 << ')'.
