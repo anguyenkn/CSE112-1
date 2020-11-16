@@ -173,7 +173,7 @@ Stmt subclass: LetStmt [
           "do array let shit"
       ]
       ifFalse:[
-          name put: expr.
+          name put: (Expr parse: expr).
       ]
    ]
 ].
