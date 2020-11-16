@@ -116,7 +116,7 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
-   add: size[arrayDict at: size put: arrayName]
+   add: size[arrayDict at: arrayName put: size]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
 
