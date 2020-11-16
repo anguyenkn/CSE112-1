@@ -116,6 +116,7 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
+   add: size[arrayDict at: size put: arrayName]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
 
@@ -154,6 +155,7 @@ Stmt subclass: DimStmt [
    init: stmt [
       name := stmt at: 2.
       size := Expr parse: (stmt at: 3).
+      ArrayExpr add: size.
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
 ].
@@ -162,7 +164,7 @@ Stmt subclass: LetStmt [
    |name expr|
    LetStmt class >> new: stmt [^ super new init: stmt]
    init: stmt [
-      name := stmt at: 2.
+      name := Expr parse: (stmt at: 2).
       expr := Expr parse: (stmt at: 3).
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
