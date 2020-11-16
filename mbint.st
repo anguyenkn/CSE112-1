@@ -168,6 +168,14 @@ Stmt subclass: LetStmt [
       expr := Expr parse: (stmt at: 3).
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
+   interp [
+      name isArray ifTrue:[
+          "do array let shit"
+      ]
+      ifFalse:[
+          name put: expr.
+      ]
+   ]
 ].
 
 Stmt subclass: GotoStmt [
