@@ -44,7 +44,7 @@ Object subclass: MiniBasic [
       caller := thisContext parentContext.
       stdout << object class << ' inherits '
              << caller method << ': ' << object << nl.
-   ] 
+   ]
    prefix [^ '(', self class printString, ' ']
    assertionFailed: message [
       stderr << 'Assertion Failed: ' << message << nl.
@@ -90,6 +90,7 @@ Expr subclass: UnopExpr [
    init: op init: opn [
       oper := op. opnd := opn.
    ]
+   value [^ ((opnd value) perform: oper)]
    printOn: file [
       ^ file << self prefix << oper << ' ' << opnd << ')'.
    ]
@@ -103,6 +104,7 @@ Expr subclass: BinopExpr [
    init: op with: opn1 with: opn2 [
       oper := op. opnd1 := opn1. opnd2 := opn2.
    ]
+   value [^ ((opnd1 value) perform: oper with: (opnd2 value))]
    printOn: file [
       ^ file << self prefix << oper << ' ' << opnd1
              << ' ' << opnd2 << ')'.
@@ -114,6 +116,7 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
+   add: size[arrayDict at: arrayName put: size]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
 
@@ -152,6 +155,7 @@ Stmt subclass: DimStmt [
    init: stmt [
       name := stmt at: 2.
       size := Expr parse: (stmt at: 3).
+      ArrayExpr add: size.
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
 ].
@@ -160,7 +164,7 @@ Stmt subclass: LetStmt [
    |name expr|
    LetStmt class >> new: stmt [^ super new init: stmt]
    init: stmt [
-      name := stmt at: 2.
+      name := Expr parse: (stmt at: 2).
       expr := Expr parse: (stmt at: 3).
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
@@ -342,4 +346,3 @@ Object subclass: Main [
 ].
 
 Main main.
-
