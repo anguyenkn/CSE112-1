@@ -153,9 +153,11 @@ Stmt subclass: DimStmt [
    |name size|
    DimStmt class >> new: stmt [^ super new init: stmt]
    init: stmt [
+      |arr|
       name := stmt at: 2.
       size := Expr parse: (stmt at: 3).
-      ArrayExpr add: size.
+      arr := ArrayExpr new: name.
+      arr add: size.
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
 ].
