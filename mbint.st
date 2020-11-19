@@ -184,12 +184,12 @@ Stmt subclass: LetStmt [
 ].
 
 Stmt subclass: GotoStmt [
-   |label|
+   |label labelNr|
    GotoStmt class >> new: stmt [^ super new init: stmt]
    init: stmt [
       label := stmt at: 2.
       labelNr := stmt parseLabelNr: label.
-      " Stmt setStmtLabel: label. "
+      "Stmt setStmtLabel: label."
    ]
    printOn: file [^ file << self prefix << label << ')']
 ].
