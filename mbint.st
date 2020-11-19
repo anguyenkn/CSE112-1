@@ -188,6 +188,7 @@ Stmt subclass: GotoStmt [
    GotoStmt class >> new: stmt [^ super new init: stmt]
    init: stmt [
       label := stmt at: 2.
+      Stmt printLabels.
       labelNr := Stmt parseLabelNr: label.
       "Stmt setStmtLabel: label."
    ]
