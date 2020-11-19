@@ -146,6 +146,10 @@ MiniBasic subclass: Stmt [ "abstract base class"
    Stmt class >> incrStmtNr [stmtNr := stmtNr + 1]
    labelDict := Dictionary new.
    printOn: file [^ file << self prefix << ')']
+   Stmt class >> setStmtLabel: label [stmtNr := (labelDict at: label)]
+   Stmt class >> addLabel: label with: value [labelDict at: label put: value]
+   Stmt class >> printLabels [stdout << labelDict << nl.]
+
    interp [MiniBasic unimplemented: self.]
 ].
 
@@ -155,7 +159,7 @@ Stmt subclass: DimStmt [
    init: stmt [
       name := stmt at: 2.
       size := Expr parse: (stmt at: 3).
-      ArrayExpr add: size.
+      "name add: size."
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
 ].
@@ -181,7 +185,12 @@ Stmt subclass: LetStmt [
 Stmt subclass: GotoStmt [
    |label|
    GotoStmt class >> new: stmt [^ super new init: stmt]
-   init: stmt [label := stmt at: 2]
+   init: stmt [
+      label := stmt at: 2.
+   ]
+   interp [
+      Stmt setStmtLabel: label.
+   ]
    printOn: file [^ file << self prefix << label << ')']
 ].
 
@@ -273,9 +282,12 @@ MiniBasic subclass: Interpreter [
    init: program [
       statements := Array new: program size.
       1 to: program size do: [:index|
-         |stmt parsed|
+         |stmt label parsed|
          stmt := (program at: index) at: 3.
+         label := (program at: index) at: 2.
+         label ifNotNil: [Stmt addLabel: label with: index].
          statements at: index put: (Stmt parse: stmt).
+
       ].
    ]
 
@@ -344,6 +356,8 @@ Object subclass: Main [
          Debug > 0 ifTrue: [Main print: program].
          interpreter := Interpreter new: program.
          Debug > 0 ifTrue: [interpreter print].
+         Debug > 0 ifTrue: [Stmt printLabels].
+         "go through program and id labels here"
          interpreter interpret.
       ] on: SystemExceptions.FileError do: [:signal|
          stderr << scriptName << ': ' << fileName << ': '
