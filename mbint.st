@@ -148,7 +148,7 @@ MiniBasic subclass: Stmt [ "abstract base class"
    printOn: file [^ file << self prefix << ')']
    setStmtLabel: label [stmtNr := (labelDict at: label)]
    Stmt class >> addLabel: label with: value [labelDict at: label put: value]
-   printLabels [stdout << labelDict << nl.]
+   Stmt class >> printLabels [stdout << labelDict << nl.]
 
    interp [MiniBasic unimplemented: self.]
 ].
