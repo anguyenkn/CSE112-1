@@ -202,7 +202,7 @@ Stmt subclass: IfStmt [
       label := stmt at: 3.
    ]
    interp [
-      (Expr parse: expr) ifTrue: Stmt setStmtLabel: label.
+      (expr) ifTrue: Stmt setStmtLabel: label.
    ]
    printOn: file [^ file << self prefix << expr << ' ' << label << ')']
 ].
