@@ -227,6 +227,7 @@ Stmt subclass: InputStmt [
          value := stdinNumbers nextNumber.
          stdout << thisContext method << ' '
                 << var << ': ' << value << nl.
+         var := value.
       ].
    ]
 ].
