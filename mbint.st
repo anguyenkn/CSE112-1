@@ -146,6 +146,7 @@ MiniBasic subclass: Stmt [ "abstract base class"
    Stmt class >> incrStmtNr [stmtNr := stmtNr + 1]
    labelDict := Dictionary new.
    printOn: file [^ file << self prefix << ')']
+   parseLabelNr: label [^ (labelDicxt at: label)]
    setStmtLabel: label [stmtNr := (labelDict at: label)]
    Stmt class >> addLabel: label with: value [labelDict at: label put: value]
    Stmt class >> printLabels [stdout << labelDict << nl.]
@@ -187,7 +188,8 @@ Stmt subclass: GotoStmt [
    GotoStmt class >> new: stmt [^ super new init: stmt]
    init: stmt [
       label := stmt at: 2.
-      Stmt setStmtLabel: label.
+      labelNr := stmt parseLabelNr: label.
+      " Stmt setStmtLabel: label. "
    ]
    printOn: file [^ file << self prefix << label << ')']
 ].
