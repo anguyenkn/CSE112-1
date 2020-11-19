@@ -148,6 +148,7 @@ MiniBasic subclass: Stmt [ "abstract base class"
    printOn: file [^ file << self prefix << ')']
    setStmtLabel: label [stmtNr := (labelDict at: label)]
    addLabel: label with: value [labelDict at: label put: value]
+   printLabels [stdout << labelDict << nl.]
 
    interp [MiniBasic unimplemented: self.]
 ].
@@ -276,9 +277,11 @@ MiniBasic subclass: Interpreter [
    init: program [
       statements := Array new: program size.
       1 to: program size do: [:index|
-         |stmt parsed|
+         |stmt label parsed|
          stmt := (program at: index) at: 3.
+         label := (program at: index) at: 2
          statements at: index put: (Stmt parse: stmt).
+         label ifNotNil: [Stmt addLabel: label with: index]
       ].
    ]
 
@@ -347,6 +350,7 @@ Object subclass: Main [
          Debug > 0 ifTrue: [Main print: program].
          interpreter := Interpreter new: program.
          Debug > 0 ifTrue: [interpreter print].
+         Debug > 0 ifTrue: [Stmt printLabels].
          "go through program and id labels here"
          interpreter interpret.
       ] on: SystemExceptions.FileError do: [:signal|
