@@ -158,7 +158,7 @@ Stmt subclass: DimStmt [
    init: stmt [
       name := stmt at: 2.
       size := Expr parse: (stmt at: 3).
-      ArrayExpr add: size.
+      name add: size.
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
 ].
