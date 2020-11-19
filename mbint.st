@@ -279,9 +279,9 @@ MiniBasic subclass: Interpreter [
       1 to: program size do: [:index|
          |stmt label parsed|
          stmt := (program at: index) at: 3.
-         label := (program at: index) at: 2
+         label := (program at: index) at: 2.
          statements at: index put: (Stmt parse: stmt).
-         label ifNotNil: [Stmt addLabel: label with: index]
+         label ifNotNil: [Stmt addLabel: label with: index].
       ].
    ]
 
