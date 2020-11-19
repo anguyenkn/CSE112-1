@@ -146,7 +146,7 @@ MiniBasic subclass: Stmt [ "abstract base class"
    Stmt class >> incrStmtNr [stmtNr := stmtNr + 1]
    labelDict := Dictionary new.
    printOn: file [^ file << self prefix << ')']
-   Stmt class >> parseLabelNr: label [^ (labelDicxt at: label)]
+   Stmt class >> parseLabelNr: label [^ (labelDict at: label)]
    setStmtLabel: label [stmtNr := (labelDict at: label)]
    Stmt class >> addLabel: label with: value [labelDict at: label put: value]
    Stmt class >> printLabels [stdout << labelDict << nl.]
