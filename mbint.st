@@ -76,9 +76,9 @@ Expr subclass: VarExpr [
       #pi  -> -1.0 arcCos.
    }.
    VarExpr class >> new: var [^ super new init: var]
-   VarExpr class >> new: setEnd[varDict at: #eof put: 1.0]
+   VarExpr class >> setEnd [varDict at: #eof put: 1.0]
    init: var [variable := var]
-   printOn: file [^ file << self prefix << variable << ')']
+   printOn: file [^ file << self prefix  << variable << ')']
    put: val [varDict at: variable put: val]
    value [^ varDict at: variable ifAbsent: [0.0]]
 ].
@@ -231,10 +231,11 @@ Stmt subclass: InputStmt [
            VarExpr setEnd.
          ]
          ifFalse:[
-            var put: value.
-         ]
+            var put: value
+         
             stdout << thisContext method << ' '
                 << var << ': ' << value << nl.
+         ]
       ].
    ]
 ].
