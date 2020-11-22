@@ -165,8 +165,8 @@ Stmt subclass: DimStmt [
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
       |arr|
-      arr:= Array new: size.
-      ArrayExpr add: name with: arr 
+      arr:= Array new: size value.
+      ArrayExpr add: name with: arr
       "implement interp method, call ArrayExpr class method to insert new array into the arrayDict"
 
    ]
@@ -234,7 +234,7 @@ Stmt subclass: InputStmt [
       inputVars do: [:var|
          |value|
          value := stdinNumbers nextNumber.
-         
+
          stdinNumbers atEnd ifTrue:[
            VarExpr setEnd.
          ]
@@ -245,7 +245,7 @@ Stmt subclass: InputStmt [
                 << var << ': ' << value << nl."
          ]
 
-          
+
       ].
    ]
 ].
