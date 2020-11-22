@@ -79,6 +79,7 @@ Expr subclass: VarExpr [
    VarExpr class >> setEnd [varDict at: #eof put: 1.0]
    init: var [variable := var]
    printOn: file [^ file << self prefix  << variable << ')']
+  
    put: val [varDict at: variable put: val]
    value [^ varDict at: variable ifAbsent: [0.0]]
 ].
@@ -119,6 +120,8 @@ Expr subclass: ArrayExpr [
    init: var [arrayName := var]
    ArrayExpr class >> aget: name[^arrayDict at:name]
    ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
+   ArrayExpr class >> get: name with: index[name at: index]
+   ArrayExpr class >> set: name with: index with: value[name at: index put: value]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
 
@@ -190,14 +193,13 @@ Stmt subclass: LetStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
-      |arrGet|
+      |index arr|
       name isArray ifTrue:[
-<<<<<<< HEAD
-          arrGet:= ArrayExpr aget: name.
+          index:= ArrayExpr aget: name.
+          index:=index+1.
+          arr:= ArrayExpr get: name with: index.
+          ArrayExpr set: name with: index with: (expr value).
 
-=======
-          "do array let shit"
->>>>>>> bbaa19dbbb385fafa6e08102c2d1b988eb1d8d7c
       ]
       ifFalse:[
           name put: (expr value).
