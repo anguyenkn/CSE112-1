@@ -117,6 +117,7 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
+   "aget: index[arrayDict at: ]"
    add: size[arrayDict at: arrayName put: size]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
@@ -237,11 +238,13 @@ Stmt subclass: InputStmt [
            VarExpr setEnd.
          ]
          ifFalse:[
-            var put: value
-         
-            stdout << thisContext method << ' '
-                << var << ': ' << value << nl.
+            var put: value.
+
+            "stdout << thisContext method << ' '
+                << var << ': ' << value << nl."
          ]
+
+          
       ].
    ]
 ].
