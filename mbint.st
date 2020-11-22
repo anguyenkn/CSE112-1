@@ -79,7 +79,7 @@ Expr subclass: VarExpr [
    VarExpr class >> setEnd [varDict at: #eof put: 1.0]
    init: var [variable := var]
    printOn: file [^ file << self prefix  << variable << ')']
-  
+
    put: val [varDict at: variable put: val]
    value [^ varDict at: variable ifAbsent: [0.0]]
 ].
@@ -177,7 +177,7 @@ Stmt subclass: DimStmt [
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
       |arr|
-      
+
       arr:= Array new: (size value rounded).
       ArrayExpr add: name with: arr
 
@@ -195,9 +195,9 @@ Stmt subclass: LetStmt [
    interp [
       |index arr|
       name isArray ifTrue:[
-          index:= ArrayExpr aget: name.
-          index:=index+1.
-          arr:= ArrayExpr get: name with: index.
+          index := (ArrayExpr aget: name).
+          index := index + 1.
+          arr := ArrayExpr get: name with: index.
           ArrayExpr set: name with: index with: (expr value).
 
       ]
