@@ -117,9 +117,18 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
-   aget: name[^arrayDict at:name]
+   ArrayExpr class >> aget: name[^arrayDict at:name]
    ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
    printOn: file [^ file << self prefix << arrayName << ')']
+].
+
+  Array extend [
+   Array class >> new: size with: value [
+      |a|
+      a := self new: size rounded.
+      1 to: size do: [:i| a at: i put: value].
+      ^ a
+   ]
 ].
 
 Expr extend [
@@ -165,9 +174,9 @@ Stmt subclass: DimStmt [
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
       |arr|
-      arr:= Array new: (size value) asInteger.
+      
+      arr:= Array new: (size value rounded).
       ArrayExpr add: name with: arr
-      "implement interp method, call ArrayExpr class method to insert new array into the arrayDict"
 
    ]
 ].
@@ -181,9 +190,10 @@ Stmt subclass: LetStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
+      |arrGet|
       name isArray ifTrue:[
-         "just add the array to the array table??"
-          "do array let shit"
+          arrGet:= ArrayExpr aget: name.
+
       ]
       ifFalse:[
           name put: (expr value).
