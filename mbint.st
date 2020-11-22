@@ -160,9 +160,14 @@ Stmt subclass: DimStmt [
    init: stmt [
       name := stmt at: 2.
       size := Expr parse: (stmt at: 3).
-      "name add: size."
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
+   interp[
+      "arr:= ArrayExpr new: name
+      arr add: size."
+      "implement interp method, call ArrayExpr class method to insert new array into the arrayDict"
+
+   ]
 ].
 
 Stmt subclass: LetStmt [
@@ -175,6 +180,7 @@ Stmt subclass: LetStmt [
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
       name isArray ifTrue:[
+         "just add the array to the array table??"
           "do array let shit"
       ]
       ifFalse:[
