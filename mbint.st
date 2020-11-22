@@ -182,7 +182,6 @@ Stmt subclass: LetStmt [
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
       name isArray ifTrue:[
-         "just add the array to the array table??"
           "do array let shit"
       ]
       ifFalse:[
