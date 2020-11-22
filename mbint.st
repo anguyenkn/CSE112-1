@@ -118,7 +118,7 @@ Expr subclass: ArrayExpr [
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
    aget: name[^arrayDict at:name]
-   ArrayExpr class >> add: name arr[arrayDict at: name put: arr]
+   ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
 
@@ -164,10 +164,9 @@ Stmt subclass: DimStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
-      "|arr|
-      arr:= ArrayExpr new: size
-      arr add 
-      arr add: size."
+      |arr|
+      arr:= Array new: size.
+      ArrayExpr add: name with: arr 
       "implement interp method, call ArrayExpr class method to insert new array into the arrayDict"
 
    ]
