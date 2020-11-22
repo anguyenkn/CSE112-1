@@ -76,8 +76,9 @@ Expr subclass: VarExpr [
       #pi  -> -1.0 arcCos.
    }.
    VarExpr class >> new: var [^ super new init: var]
+   VarExpr class >> setEnd [varDict at: #eof put: 1.0]
    init: var [variable := var]
-   printOn: file [^ file << self prefix << variable << ')']
+   printOn: file [^ file << self prefix  << variable << ')']
    put: val [varDict at: variable put: val]
    value [^ varDict at: variable ifAbsent: [0.0]]
 ].
@@ -116,6 +117,7 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
+   "aget: index[arrayDict at: ]"
    add: size[arrayDict at: arrayName put: size]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
@@ -159,9 +161,14 @@ Stmt subclass: DimStmt [
    init: stmt [
       name := stmt at: 2.
       size := Expr parse: (stmt at: 3).
-      "name add: size."
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
+   interp[
+      "arr:= ArrayExpr new: name
+      arr add: size."
+      "implement interp method, call ArrayExpr class method to insert new array into the arrayDict"
+
+   ]
 ].
 
 Stmt subclass: LetStmt [
@@ -174,6 +181,7 @@ Stmt subclass: LetStmt [
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
       name isArray ifTrue:[
+         "just add the array to the array table??"
           "do array let shit"
       ]
       ifFalse:[
@@ -225,8 +233,18 @@ Stmt subclass: InputStmt [
       inputVars do: [:var|
          |value|
          value := stdinNumbers nextNumber.
-         stdout << thisContext method << ' '
-                << var << ': ' << value << nl.
+         
+         stdinNumbers atEnd ifTrue:[
+           VarExpr setEnd.
+         ]
+         ifFalse:[
+            var put: value.
+
+            "stdout << thisContext method << ' '
+                << var << ': ' << value << nl."
+         ]
+
+          
       ].
    ]
 ].
