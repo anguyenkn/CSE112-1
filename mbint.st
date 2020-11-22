@@ -192,8 +192,12 @@ Stmt subclass: LetStmt [
    interp [
       |arrGet|
       name isArray ifTrue:[
+<<<<<<< HEAD
           arrGet:= ArrayExpr aget: name.
 
+=======
+          "do array let shit"
+>>>>>>> bbaa19dbbb385fafa6e08102c2d1b988eb1d8d7c
       ]
       ifFalse:[
           name put: (expr value).
