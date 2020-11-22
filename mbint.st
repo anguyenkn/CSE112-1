@@ -165,7 +165,7 @@ Stmt subclass: DimStmt [
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
       |arr|
-      arr:= Array new: size value.
+      arr:= Array new: (size value) asInteger.
       ArrayExpr add: name with: arr
       "implement interp method, call ArrayExpr class method to insert new array into the arrayDict"
 
