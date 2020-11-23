@@ -116,7 +116,7 @@ Expr subclass: BinopExpr [
 Expr subclass: ArrayExpr [
    |arrayName|
    arrayDict := Dictionary new.
-   ArrayExpr class >> new: var with: 0.0 [^ super new init: var]
+   ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
    ArrayExpr class >> aget: name[^ arrayDict at:name ifAbsent: [0.0]]
    ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
@@ -178,7 +178,7 @@ Stmt subclass: DimStmt [
    interp[
       |arr|
 
-      arr:= Array new: (size value rounded).
+      arr:= Array new: (size value rounded) with 0.0.
       stdout << arr << nl.
       ArrayExpr add: name with: arr
 
