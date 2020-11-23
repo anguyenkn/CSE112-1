@@ -118,7 +118,7 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
-   ArrayExpr class >> aget: name[^arrayDict at:name]
+   ArrayExpr class >> aget: name[^ arrayDict at:name ifAbsent: [0.0]]
    ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
    ArrayExpr class >> get: name with: index[name at: index]
    ArrayExpr class >> set: name with: index with: value[name at: index put: value]
@@ -194,17 +194,9 @@ Stmt subclass: LetStmt [
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
       |index arr|
-<<<<<<< HEAD
-      index:= ArrayExpr aget: name.
-      index isArray ifTrue:[
-          index:=index+1.
-          arr:= ArrayExpr get: name with: index.
-=======
-      name isArray ifTrue:[
-          index := (ArrayExpr aget: name).
-          index := index + 1.
-          arr := ArrayExpr get: name with: index.
->>>>>>> db3762b328454997052d2efc9b09c860892c2ea4
+      arr:= ArrayExpr aget: name.
+      arr isArray ifTrue:[
+          index:=Expr parse:(name at:3).
           ArrayExpr set: name with: index with: (expr value).
 
       ]
