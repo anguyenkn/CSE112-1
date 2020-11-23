@@ -118,8 +118,7 @@ Expr subclass: BinopExpr [
            ^ opnd1 aget: (opnd2 value rounded) + 1 "opnd2 is the index"
        ]
        ifFalse: [
-           "normal VarExpr, use perform:"
-        
+           value [^ ((opnd1 value) perform: oper with: (opnd2 value))]
        ].
    ]
 
