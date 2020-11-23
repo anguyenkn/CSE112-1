@@ -178,7 +178,7 @@ Stmt subclass: DimStmt [
    interp[
       |arr|
 
-      arr:= Array new: (size value rounded) with 0.0.
+      arr:= Array new: (size value rounded) with: 0.0.
       stdout << arr << nl.
       ArrayExpr add: name with: arr
 
