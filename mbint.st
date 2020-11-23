@@ -117,6 +117,7 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
+   aput: index [^ arrayDict at: arrayName]
    ArrayExpr class >> aget: name[^ arrayDict at:name ifAbsent: [0.0]]
    ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
    ArrayExpr class >> get: name with: index[name at: index]
