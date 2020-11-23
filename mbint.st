@@ -194,8 +194,8 @@ Stmt subclass: LetStmt [
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
       |index arr|
-      stdout << 'arr name' << name value << nl.
-      arr:= ArrayExpr aget: name value.
+      stdout << 'arr name' << name << nl.
+      arr:= ArrayExpr aget: name.
       arr isArray ifTrue:[
           stdout << 'is array' << nl.
           index:=Expr parse:(name at:3).
