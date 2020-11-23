@@ -178,7 +178,8 @@ Stmt subclass: DimStmt [
       |arr|
       arr:= Array new: (size value rounded) with: 0.0.
       stdout << arr << nl.
-      ArrayExpr add: name with: arr
+      ArrayExpr add: name with: arr.
+      stdout << 'aget ' << ArrayExpr aget: name << nl.
 
    ]
 ].
@@ -192,7 +193,7 @@ Stmt subclass: LetStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
-      |index arr| 
+      |index arr|
       arr:= ArrayExpr aget: name.
       stdout << 'arr name' << arr << nl.
       arr isArray ifTrue:[
