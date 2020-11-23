@@ -206,16 +206,16 @@ Stmt subclass: LetStmt [
       "stdout << 'arr name value ' << (name value) << nl."
       stdout << 'expr value ' << (expr value) << nl.
       "stdout << 'arr name at 2 ' << (name at: 2) << nl.
-      stdout << 'arr name at 3 ' << (name at: 3) << nl."
+      stdout << 'arr name at 3 ' << (name at: 3) << nl.
       arr := ArrayExpr aget: (name value).
-      stdout << 'arr: ' << arr << nl.
-      arr isArray ifTrue:[
+      stdout << 'arr: ' << arr << nl."
+      ((name at: 1) class = VarExpr) ifFalse:[
           stdout << 'is array' << nl.
           index:=Expr parse:(name at:3).
           ArrayExpr set: name with: index with: (expr value).
 
       ]
-      ifFalse:[
+      ifTrue:[
           stdout << 'is not array' << nl.
           name put: (expr value).
       ]
