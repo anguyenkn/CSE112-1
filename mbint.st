@@ -79,7 +79,6 @@ Expr subclass: VarExpr [
    VarExpr class >> setEnd [varDict at: #eof put: 1.0]
    init: var [variable := var]
    printOn: file [^ file << self prefix  << variable << ')']
-
    put: val [varDict at: variable put: val]
    value [^ varDict at: variable ifAbsent: [0.0]]
 ].
@@ -177,8 +176,9 @@ Stmt subclass: DimStmt [
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
       |arr|
-      stdout << 'i am adding the new array to the array dctionary' << nl.
-      arr:= Array new: (size value rounded).
+
+      arr:= Array new: (size value rounded) with: 0.0.
+      stdout << arr << nl.
       ArrayExpr add: name with: arr
 
    ]
@@ -194,9 +194,8 @@ Stmt subclass: LetStmt [
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
       |index arr|
-      
-      arr:= ArrayExpr aget: Expr parse:(name at:2).
-      stdout << 'arr name' << arr << nl.
+      stdout << 'arr name' << name value << nl.
+      arr:= ArrayExpr aget: name.
       arr isArray ifTrue:[
           stdout << 'is array' << nl.
           index:=Expr parse:(name at:3).
