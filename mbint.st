@@ -176,14 +176,8 @@ Stmt subclass: DimStmt [
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
       |arr|
-<<<<<<< HEAD
-      stdout << 'i am adding the new array to the array dctionary' << nl.
-      arr:= Array new: (size value rounded with: 0.0).
-=======
-
       arr:= Array new: (size value rounded) with: 0.0.
       stdout << arr << nl.
->>>>>>> ae1f3573b095661c2d32ff151abed0519456b74a
       ArrayExpr add: name with: arr
 
    ]
@@ -198,15 +192,9 @@ Stmt subclass: LetStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
-      |index arr|
-<<<<<<< HEAD
-      index:= Expr parse:(name at:2).      
-      arr:= ArrayExpr aget: index.
-      stdout << 'arr name' << arr << nl.
-=======
-      stdout << 'arr name' << name value << nl.
+      |index arr| 
       arr:= ArrayExpr aget: name.
->>>>>>> ae1f3573b095661c2d32ff151abed0519456b74a
+      stdout << 'arr name' << arr << nl.
       arr isArray ifTrue:[
           stdout << 'is array' << nl.
           index:=Expr parse:(name at:3).
