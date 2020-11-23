@@ -179,7 +179,7 @@ Stmt subclass: DimStmt [
       arr:= Array new: (size value rounded) with: 0.0.
       stdout << arr << nl.
       ArrayExpr add: name with: arr.
-      stdout << 'aget ' << ArrayExpr aget: name << nl.
+      stdout << 'aget ' << (ArrayExpr aget: name) << nl.
 
    ]
 ].
