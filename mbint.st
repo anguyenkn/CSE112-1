@@ -143,9 +143,17 @@ Expr extend [
                        with: (Expr parse: (expr at: 2)).
          ].
          expr size = 3 ifTrue: [
-            ^ BinopExpr new: (expr at: 1)
-                        with: (Expr parse: (expr at: 2))
-                        with: (Expr parse: (expr at: 3)).
+             ((expr at: 1) = #aget) | ((expr at: 1) = #aput)
+             ifTrue: [
+               ^ BinopExpr new: (expr at: 1)
+                            with: (ArrayExpr new: (expr at: 2))
+                            with: (Expr parse: (expr at: 3)).
+             ]
+            ifFalse: [
+               ^ BinopExpr new: (expr at: 1)
+                            with: (Expr parse: (expr at: 2))
+                            with: (Expr parse: (expr at: 3)).
+            ]
          ].
          self assertionFailed: 'Expr>>parse: isArray wrong size'.
       ].
@@ -170,7 +178,7 @@ Stmt subclass: DimStmt [
    |name size|
    DimStmt class >> new: stmt [^ super new init: stmt]
    init: stmt [
-      name := stmt at: 2.
+      name := ArrayExpr new: (stmt at: 2).
       size := Expr parse: (stmt at: 3).
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
@@ -192,10 +200,9 @@ Stmt subclass: LetStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
-      |index arr| 
-      arr:= ArrayExpr aget: name.
-      stdout << 'arr name' << arr << nl.
-      arr isArray ifTrue:[
+      |index| 
+      stdout << 'arr name ' << name << nl.
+      name isArray ifTrue:[
           stdout << 'is array' << nl.
           index:=Expr parse:(name at:3).
           ArrayExpr set: name with: index with: (expr value).
