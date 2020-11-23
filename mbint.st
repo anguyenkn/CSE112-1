@@ -117,11 +117,10 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
-   aput: index [^(arrayDict at: (arrayName value))]
    ArrayExpr class >> aget: name[^ arrayDict at:name ifAbsent: [0.0]]
    ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
    ArrayExpr class >> get: name with: index[name at: index]
-   ArrayExpr class >> set: name with: index with: value[name at: index put: value]
+   ArrayExpr class >> aput: name with: index with: value[(arrayDict at: name) at index put: value]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
 
