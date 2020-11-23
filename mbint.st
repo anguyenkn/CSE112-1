@@ -105,11 +105,24 @@ Expr subclass: BinopExpr [
    init: op with: opn1 with: opn2 [
       oper := op. opnd1 := opn1. opnd2 := opn2.
    ]
-   value [^ ((opnd1 value) perform: oper with: (opnd2 value))]
    printOn: file [
       ^ file << self prefix << oper << ' ' << opnd1
              << ' ' << opnd2 << ')'.
    ]
+
+   getArrayExpr [^ opnd1]
+   getArrayIndex [^ opnd2]
+   value [
+       opnd1 isArrayExpr "Handle #( #aget #a #i)"
+       ifTrue: [
+           ^ opnd1 aget: (opnd2 value rounded) + 1 "opnd2 is the index"
+       ]
+       ifFalse: [
+           "normal VarExpr, use perform:"
+        
+       ].
+   ]
+
 ].
 
 Expr subclass: ArrayExpr [
@@ -117,10 +130,10 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
-   ArrayExpr class >> aget: name[^ arrayDict at:name ifAbsent: [0.0]]
    ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
-   ArrayExpr class >> get: name with: index[name at: index]
-   ArrayExpr class >> aput: name with: index with: value[(arrayDict at: name) at index put: value]
+   isArrayExpr [^ true]
+   aget: index [^ (arrayDict at: arrayName) at: index]
+   aput: index with: val [(arrayDict at: arrayName) at: index put: val]
    printOn: file [^ file << self prefix << arrayName << ')']
 ].
 
@@ -201,18 +214,12 @@ Stmt subclass: LetStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
-      |index arr|
-      stdout << 'arr name ' << name << nl.
-      stdout << 'arr name value ' << (name value) << nl.
-      "stdout << 'arr name at 2 ' << (name at: 2) << nl.
-      stdout << 'arr name at 3 ' << (name at: 3) << nl."
-      arr := ArrayExpr aget: (name value).
-      stdout << 'arr: ' << arr << nl.
-      arr isArray ifTrue:[
-          stdout << 'is array' << nl.
-          index:=Expr parse:(name at:3).
-          ArrayExpr set: name with: index with: (expr value).
-
+       name class = BinopExpr 
+       ifTrue: [
+           |arrExpr index|
+           arrExpr := name getArrayExpr.
+           index := name getArrayIndex.
+           arrExpr aput: (index value rounded) + 1 with: (expr value)
       ]
       ifFalse:[
           stdout << 'is not array' << nl.
