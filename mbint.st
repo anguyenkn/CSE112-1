@@ -118,7 +118,7 @@ Expr subclass: BinopExpr [
            ^ opnd1 aget: (opnd2 value rounded) + 1 "opnd2 is the index"
        ]
        ifFalse: [
-           value [^ ((opnd1 value) perform: oper with: (opnd2 value))]
+           ^ ((opnd1 value) perform: oper with: (opnd2 value))
        ].
    ]
 
@@ -213,7 +213,7 @@ Stmt subclass: LetStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
-       name class = BinopExpr 
+       name class = BinopExpr
        ifTrue: [
            |arrExpr index|
            arrExpr := name getArrayExpr.
