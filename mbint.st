@@ -179,6 +179,7 @@ Stmt subclass: DimStmt [
       |arr|
 
       arr:= Array new: (size value rounded).
+      stdout << arr << nl.
       ArrayExpr add: name with: arr
 
    ]
