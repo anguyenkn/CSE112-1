@@ -197,19 +197,10 @@ Stmt subclass: DimStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
-<<<<<<< HEAD
        |newArr|
       newArr := Array new: (size value rounded) withAll: 0.0d0.
       name addNewArray: newArr.
    ] 
-=======
-      |arr|
-      arr:= Array new: (size value rounded) with: 0.0.
-      stdout << arr << nl.
-      ArrayExpr add: name with: arr.
-
-   ]
->>>>>>> bafbf2e03163e579bc538b1cb77a04cb52b80d66
 ].
 
 Stmt subclass: LetStmt [
