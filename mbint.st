@@ -204,6 +204,7 @@ Stmt subclass: LetStmt [
       |index arr|
       stdout << 'arr name ' << name << nl.
       stdout << 'arr name value ' << (name value) << nl.
+      stdout << 'expr value ' << (expr value) << nl.
       "stdout << 'arr name at 2 ' << (name at: 2) << nl.
       stdout << 'arr name at 3 ' << (name at: 3) << nl."
       arr := ArrayExpr aget: (name value).
