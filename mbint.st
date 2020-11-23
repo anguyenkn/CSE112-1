@@ -1,5 +1,7 @@
 #!/afs/cats.ucsc.edu/courses/cse112-wm/usr/smalltalk/bin/gst -f
-"$Id: mbint.st,v 1.10 2020-11-09 23:34:52-08 - - $"
+"$Id: mbint.st,v 1.10 2020-11-09 23:34:52-08 - - $
+Nikita Usenko nusenko@ucsc.edu
+Surya Rani srani@ucsc.edu"
 
 Object subclass: NumberStream [
    |atEndFlag stream buffer|
@@ -200,7 +202,7 @@ Stmt subclass: DimStmt [
        |newArr|
       newArr := Array new: (size value rounded) withAll: 0.0d0.
       name addNewArray: newArr.
-   ] 
+   ]
 ].
 
 Stmt subclass: LetStmt [
