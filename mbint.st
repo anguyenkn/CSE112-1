@@ -1,5 +1,7 @@
 #!/afs/cats.ucsc.edu/courses/cse112-wm/usr/smalltalk/bin/gst -f
-"$Id: mbint.st,v 1.10 2020-11-09 23:34:52-08 - - $"
+"$Id: mbint.st,v 1.10 2020-11-09 23:34:52-08 - - $
+Nikita Usenko nusenko@ucsc.edu
+Surya Rani srani@ucsc.edu"
 
 Object subclass: NumberStream [
    |atEndFlag stream buffer|
@@ -57,6 +59,7 @@ MiniBasic subclass: Expr [ "abstract base class"
    nan := 0.0 / 0.0.
    printOn: file [^ file << self prefix << ')']
    value [MiniBasic unimplemented: self. ^ nan]
+   isArrayExpr [^ false]
 ].
 
 Expr subclass: NumExpr [
@@ -105,11 +108,23 @@ Expr subclass: BinopExpr [
    init: op with: opn1 with: opn2 [
       oper := op. opnd1 := opn1. opnd2 := opn2.
    ]
-   value [^ ((opnd1 value) perform: oper with: (opnd2 value))]
    printOn: file [
       ^ file << self prefix << oper << ' ' << opnd1
              << ' ' << opnd2 << ')'.
    ]
+
+   getArrayExpr [^ opnd1]
+   getArrayIndex [^ opnd2]
+   value [
+       opnd1 isArrayExpr "Handle #( #aget #a #i)"
+       ifTrue: [
+           ^ opnd1 aget: (opnd2 value rounded) + 1 "opnd2 is the index"
+       ]
+       ifFalse: [
+           ^ ((opnd1 value) perform: oper with: (opnd2 value))
+       ].
+   ]
+
 ].
 
 Expr subclass: ArrayExpr [
@@ -117,9 +132,21 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
-   "aget: index[arrayDict at: ]"
-   add: size[arrayDict at: arrayName put: size]
+
+   addNewArray: newArr [ arrayDict at: arrayName put: newArr]
+   isArrayExpr [^ true]
+   aget: index [^ (arrayDict at: arrayName) at: index]
+   aput: index with: val [(arrayDict at: arrayName) at: index put: val]
    printOn: file [^ file << self prefix << arrayName << ')']
+].
+
+  Array extend [
+   Array class >> new: size with: value [
+      |a|
+      a := self new: size rounded.
+      1 to: size do: [:i| a at: i put: value].
+      ^ a
+   ]
 ].
 
 Expr extend [
@@ -132,9 +159,17 @@ Expr extend [
                        with: (Expr parse: (expr at: 2)).
          ].
          expr size = 3 ifTrue: [
-            ^ BinopExpr new: (expr at: 1)
-                        with: (Expr parse: (expr at: 2))
-                        with: (Expr parse: (expr at: 3)).
+             ((expr at: 1) = #aget) | ((expr at: 1) = #aput)
+             ifTrue: [
+               ^ BinopExpr new: (expr at: 1)
+                            with: (ArrayExpr new: (expr at: 2))
+                            with: (Expr parse: (expr at: 3)).
+             ]
+            ifFalse: [
+               ^ BinopExpr new: (expr at: 1)
+                            with: (Expr parse: (expr at: 2))
+                            with: (Expr parse: (expr at: 3)).
+            ]
          ].
          self assertionFailed: 'Expr>>parse: isArray wrong size'.
       ].
@@ -149,7 +184,8 @@ MiniBasic subclass: Stmt [ "abstract base class"
    labelDict := Dictionary new.
    printOn: file [^ file << self prefix << ')']
    Stmt class >> setStmtLabel: label [stmtNr := (labelDict at: label)]
-   Stmt class >> addLabel: label with: value [labelDict at: label put: value]
+   Stmt class >> addLabel: label
+      with: value [labelDict at: label put: value]
    Stmt class >> printLabels [stdout << labelDict << nl.]
 
    interp [MiniBasic unimplemented: self.]
@@ -159,15 +195,14 @@ Stmt subclass: DimStmt [
    |name size|
    DimStmt class >> new: stmt [^ super new init: stmt]
    init: stmt [
-      name := stmt at: 2.
+      name := ArrayExpr new: (stmt at: 2).
       size := Expr parse: (stmt at: 3).
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
-      "arr:= ArrayExpr new: name
-      arr add: size."
-      "implement interp method, call ArrayExpr class method to insert new array into the arrayDict"
-
+       |newArr|
+      newArr := Array new: (size value rounded) withAll: 0.0d0.
+      name addNewArray: newArr.
    ]
 ].
 
@@ -180,9 +215,12 @@ Stmt subclass: LetStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << expr << ')']
    interp [
-      name isArray ifTrue:[
-         "just add the array to the array table??"
-          "do array let shit"
+       name class = BinopExpr
+       ifTrue: [
+           |arrExpr index|
+           arrExpr := name getArrayExpr.
+           index := name getArrayIndex.
+           arrExpr aput: (index value rounded) + 1 with: (expr value)
       ]
       ifFalse:[
           name put: (expr value).
@@ -233,7 +271,7 @@ Stmt subclass: InputStmt [
       inputVars do: [:var|
          |value|
          value := stdinNumbers nextNumber.
-         
+
          stdinNumbers atEnd ifTrue:[
            VarExpr setEnd.
          ]
@@ -244,7 +282,7 @@ Stmt subclass: InputStmt [
                 << var << ': ' << value << nl."
          ]
 
-          
+
       ].
    ]
 ].
