@@ -57,6 +57,7 @@ MiniBasic subclass: Expr [ "abstract base class"
    nan := 0.0 / 0.0.
    printOn: file [^ file << self prefix << ')']
    value [MiniBasic unimplemented: self. ^ nan]
+   isArrayExpr [^ false]
 ].
 
 Expr subclass: NumExpr [
@@ -129,7 +130,8 @@ Expr subclass: ArrayExpr [
    arrayDict := Dictionary new.
    ArrayExpr class >> new: var [^ super new init: var]
    init: var [arrayName := var]
-   ArrayExpr class >> add: name with:arr[arrayDict at: name put: arr]
+
+   addNewArray: newArr [ arrayDict at: arrayName put: newArr]
    isArrayExpr [^ true]
    aget: index [^ (arrayDict at: arrayName) at: index]
    aput: index with: val [(arrayDict at: arrayName) at: index put: val]
@@ -195,13 +197,10 @@ Stmt subclass: DimStmt [
    ]
    printOn: file [^ file << self prefix << name << ' ' << size << ')']
    interp[
-      |arr|
-      arr:= Array new: (size value rounded) with: 0.0.
-      stdout << arr << nl.
-      ArrayExpr add: name with: arr.
-      stdout << 'aget ' << (ArrayExpr aget: name) << nl.
-
-   ]
+       |newArr|
+      newArr := Array new: (size value rounded) withAll: 0.0d0.
+      name addNewArray: newArr.
+   ] 
 ].
 
 Stmt subclass: LetStmt [
@@ -221,7 +220,6 @@ Stmt subclass: LetStmt [
            arrExpr aput: (index value rounded) + 1 with: (expr value)
       ]
       ifFalse:[
-          stdout << 'is not array' << nl.
           name put: (expr value).
       ]
    ]
